@@ -34,7 +34,7 @@ async def fetch_and_parse_feed():
 
     return list(reversed(new_items))  # oldest first
 
-@tasks.loop(hour=1)  # adjust frequency as needed
+@tasks.loop(hours=1)  # adjust frequency as needed
 async def poll_rappler_feed():
     await client.wait_until_ready()
     channel = client.get_channel(CHANNEL_ID)

@@ -50,11 +50,20 @@ async def poll_rappler_feed():
 
     for entry in new_entries:
         link = entry.link
+        title = getattr(entry, "title", "New article")
 
-        # Keep messages short to avoid clutter
-        content = f"{link}"
-        await channel.send(content)
-        await asyncio.sleep(10)  # small delay to avoid rate limits
+        # Minimal embed for title/context
+        embed = discord.Embed(
+            title=title,
+            color=discord.Color.blue(),
+        )
+        embed.add_field(name="Article", value=link, inline=False)
+
+        # Send embed + plain URL - Discord will auto-generate preview from the URL
+        await channel.send(embed=embed)
+        await channel.send(link)  # Plain URL triggers automatic rich preview
+        
+        await asyncio.sleep(15)  # Longer delay for two messages
 
 @client.event
 async def on_ready():
